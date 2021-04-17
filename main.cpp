@@ -1,83 +1,54 @@
-#include "pistache/http.h"
-#include "pistache/router.h"
-#include "pistache/endpoint.h"
 
-using namespace Pistache;
+#include <iostream>
 
-namespace Generic {
-    void handleReady(const Rest::Request&, Http::ResponseWriter response) {
-        response.send(Http::Code::Ok, "1");
-    }
+#include "include/stdafx.h"
+#include "include/handler.h"
+
+using namespace std;
+using namespace web;
+using namespace http;
+using namespace utility;
+using namespace http::experimental::listener;
+
+std::unique_ptr<handler> g_httpHandler;
+
+void on_initialize(const string_t& address) {
+
+    uri_builder uri(address);
+  
+    auto addr = uri.to_uri().to_string();
+    g_httpHandler = std::unique_ptr<handler>(new handler(addr));
+    g_httpHandler->open().wait();
+
+    ucout << utility::string_t(U("Listening for requests at: ")) << addr << std::endl;
+
+    return;
 }
 
 
-class HelloEndpoint {
-public:
-    explicit HelloEndpoint(Address addr) : httpEndpoint(std::make_shared<Http::Endpoint>(addr)) 
-    {}
-
-    void init(size_t thr = 2) {
-        auto opts = Http::Endpoint::options()
-            .threads(static_cast<int>(thr));
-        httpEndpoint->init(opts);
-        setupRoutes();
-    }
-
-    void start() {
-        httpEndpoint->setHandler(router.handler());
-        httpEndpoint->serve();
-    }
-
-
-private:
-    using Lock = std::mutex;
-    using Guard = std::lock_guard<Lock>;
-    Lock metricsLock;
-
-    std::shared_ptr<Http::Endpoint> httpEndpoint;
-    Rest::Router router;
-
-    void doGetHello(const Rest::Request& request, Http::ResponseWriter response) {
-        auto name = request.param(":name").as<std::string>();
-
-        std::cout << "Hola " << name << std::endl;
-
-        response.send(Http::Code::Ok, std::to_string(10));
-    }
-
-    void setupRoutes() {
-        using namespace Rest;
-
-        Routes::Get(router, "/ready", Routes::bind(&Generic::handleReady));
-        Routes::Get(router, "/hello/:name", Routes::bind(&HelloEndpoint::doGetHello, this));
-
-        // Routes::Post(router, "/record/:name/:value?", Routes::bind(&StatsEndpoint::doRecordMetric, this));
-        // Routes::Get(router, "/value/:name", Routes::bind(&StatsEndpoint::doGetMetric, this));
-        // Routes::Get(router, "/auth", Routes::bind(&StatsEndpoint::doAuth, this));
-    }
-
-};
+void on_shutdown() {
+    g_httpHandler->close().wait();
+    return;
+}
 
 
 int main(int argc, char *argv[]) {
-    Port port(9080);
 
-    int thr = 2;
+    utility::string_t port = U("34568");
 
-    if (argc >= 2) {
-        port = static_cast<uint16_t>(std::stol(argv[1]));
-
-        if (argc == 3)
-            thr = std::stoi(argv[2]);
+    if(argc == 2) {
+        port = argv[1];
     }
 
-    Address addr(Ipv4::any(), port);
+    utility::string_t address = U("http://127.0.0.1:");
+    address.append(port);
 
-    std::cout << "Cores = " << hardware_concurrency() << std::endl;
-    std::cout << "Using " << thr << " threads" << std::endl;
+    on_initialize(address);
+    std::cout << "Press ENTER to exit." << std::endl;
 
-    HelloEndpoint hello(addr);
+    std::string line;
+    std::getline(std::cin, line);
 
-    hello.init(thr);
-    hello.start();
+    on_shutdown();
+    return 0;
 }
