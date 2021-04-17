@@ -1,5 +1,5 @@
 # Pequeño microservicio en C++
-## Solo funciona en linux, en windows funciona bien con wsl2 Ubuntu
+#### Solo funciona en linux, en windows funciona bien con wsl2 Ubuntu
 
 ## Instalar
 
