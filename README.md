@@ -1,7 +1,9 @@
-# Pequeño microservicio en C++
-#### Solo funciona en linux, en windows funciona bien con wsl2 Ubuntu
+# C++ Microservice
+#### Only works in linux
 
-## Instalar
+This is a example of microservice built in c++, and using hexagonal architecture.
+
+## Install
 
 sudo apt-get install build-essential
 
@@ -12,11 +14,11 @@ sudo apt-get install libcpprest-dev
 sudo apt-get install nlohmann-json3-dev
 
 
-## Compilar 
+## Compile 
 
- cmake .
+cmake .
  
- make
+make
 
 
 ## Test
