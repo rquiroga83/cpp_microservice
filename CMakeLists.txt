@@ -12,8 +12,9 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 
 
 add_executable(cpp_microservice
-  main.cpp
-  src/handler.cpp
+	main.cpp
+	src/handler.cpp
+	src/core/services/user_domain_service.cpp
   )
 
 set(Casablanca_LIBRARIES "-lboost_system -lcrypto -lssl -lcpprest")
