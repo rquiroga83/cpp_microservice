@@ -1,38 +1,40 @@
-cmake_minimum_required (VERSION 3.11)
-if (UNIX)
-  add_definitions(-Wno-sign-compare -Wno-enum-compare)
-endif(UNIX)
-project(cpp_microservice)
-set (CMAKE_CXX_STANDARD 17)
-option(DBMS "Dbms" OFF)
-include_directories("${CMAKE_SOURCE_DIR}")
-set (CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/Build)
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
+cmake_minimum_required(VERSION 3.11)
 
+set(project_name cpp-microservice) 
 
-add_executable(cpp_microservice
-	main.cpp
-	src/handler.cpp
-	src/core/services/user_domain_service.cpp
-  )
+project(${project_name})
 
-set(Casablanca_LIBRARIES "-lboost_system -lcrypto -lssl -lcpprest")
-set(LINKING_LIBRARIES ${Casablanca_LIBRARIES})
+set(CMAKE_CXX_STANDARD 17)
 
-if(DBMS)
-	set(NEW_DB_SRC_DIR ${CMAKE_SOURCE_DIR}/dbms/src)
-	add_library(dbms SHARED
-		${NEW_DB_SRC_DIR}/Dbms.cpp
-		)
-	set(Dbms_dep_lib "-lpqxx -lpq")
-	set(LINKING_LIBRARIES ${LINKING_LIBRARIES} dbms ${Dbms_dep_lib})
-endif(DBMS)
+add_library(${project_name}-lib
+        src/AppComponent.hpp
+        src/controllers/UserController.cpp
+        src/controllers/UserController.hpp
+        src/controllers/dto/DTOs.hpp
+		src/core/services/UserDomainService.cpp
+)
 
-if (UNIX)
-	# Linking POSIX threads
-	find_package(Threads REQUIRED)
-	set(LINKING_LIBRARIES ${LINKING_LIBRARIES} Threads::Threads)
-endif (UNIX)
+## link libs
 
-target_link_libraries(cpp_microservice PRIVATE ${LINKING_LIBRARIES})
+find_package(oatpp 1.2.5 REQUIRED)
+
+target_link_libraries(${project_name}-lib
+        PUBLIC oatpp::oatpp
+        PUBLIC oatpp::oatpp-test
+)
+
+target_include_directories(${project_name}-lib PUBLIC src)
+
+## add executables
+
+add_executable(${project_name}-exe
+        src/App.cpp
+	)
+target_link_libraries(${project_name}-exe ${project_name}-lib)
+add_dependencies(${project_name}-exe ${project_name}-lib)
+
+set_target_properties(${project_name}-lib ${project_name}-exe PROPERTIES
+        CXX_STANDARD 17
+        CXX_EXTENSIONS OFF
+        CXX_STANDARD_REQUIRED ON
+)
