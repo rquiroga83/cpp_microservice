@@ -4,20 +4,18 @@
 #include "../domain/User.cpp"
 
 class UserDomainService : UserService {
+private:
+    std::shared_ptr<UserRepository> userRepository;
+    
 public:
-    UserDomainService(std::shared_ptr<UserRepository> _userRepository);
+    UserDomainService(std::shared_ptr<UserRepository> repo);
     virtual ~UserDomainService();
 
     std::shared_ptr<User> getUserById(long id) override;
-
-private:
-    std::shared_ptr<UserRepository> userRepository;
 };
 
 
-UserDomainService::UserDomainService(std::shared_ptr<UserRepository> _userRepository) {
-    userRepository = _userRepository;
-}
+UserDomainService::UserDomainService(std::shared_ptr<UserRepository> repo) : userRepository(repo){ }
 
 UserDomainService::~UserDomainService(){ }
 

@@ -5,36 +5,27 @@
 using namespace std;
 
 class User {
+private:
+    long _id;
+    string _name;
+    string _email;
 public:
     User();
     virtual ~User();
 
-    long getId();
-    string getName();
-    string getEmail();
+    const long& id() const { return _id; } 
+    void id(const long& id) { _id = id; } 
+
+    const std::string& name() const { return _name; } 
+    void name(const std::string& name) { _name = name; } 
+
+    const std::string& email() const { return _email; } 
+    void email(const std::string& email) { _email = email; } 
         
-
-private:
-    long id;
-    string name;
-    string email;
-
 };
 
 User::User() { }
 
 User::~User() { }
-
-long User::getId() {
-    return id;
-}
-
-string User::getName() {
-    return name;
-}
-
-string User::getEmail() {
-    return email;
-}
 
 #endif // USER_CPP
