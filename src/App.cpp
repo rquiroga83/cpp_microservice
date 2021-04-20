@@ -2,7 +2,7 @@
 #include "./AppComponent.hpp"
 
 #include "oatpp/network/Server.hpp"
-//#include "./ServiceLocator.hpp"
+// #include "./ServiceLocator.hpp"
 #include "./SLModules.cpp"
 #include "./core/ports/UserService.cpp"
 
@@ -21,11 +21,11 @@ void run() {
     userController->addEndpointsToRouter(router);
 
     /*  Service locator */
-    //auto sl = ServiceLocator::create();
-    //sl->modules().add<RepositoriesSLModule>().add<ServicesSLModule>();
-    //auto slc = sl->getContext();
-    //auto userService = slc->resolve<UserService>();
-
+    auto sl = ServiceLocator::create();
+    sl->modules().add<RepositoriesSLModule>().add<ServicesSLModule>();
+    auto slc = sl->getContext();
+    auto userService = slc->resolve<UserService>("UserDomainService");
+    userController->setUserService(userService);
 
     /* Get connection handler component */
     OATPP_COMPONENT(std::shared_ptr<oatpp::network::ConnectionHandler>, connectionHandler);

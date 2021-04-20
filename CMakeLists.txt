@@ -8,14 +8,14 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_library(${project_name}-lib
         src/AppComponent.hpp
-		src/ServiceLocator.hpp
-		#src/SLModules.cpp
-		src/core/ports/UserRepository.cpp
-		src/repositories/UserRepositoryImpl.cpp
+	#src/ServiceLocator.hpp
+	#src/SLModules.cpp
+	src/core/ports/UserRepository.cpp
+	src/repositories/UserRepositoryImpl.cpp
         src/controllers/UserController.cpp
         src/controllers/UserController.hpp
         src/controllers/dto/DTOs.hpp
-		src/core/services/UserDomainService.cpp
+	src/core/services/UserDomainService.cpp
 )
 
 ## link libs

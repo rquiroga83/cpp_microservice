@@ -1,9 +1,8 @@
-#include <memory>
 #include "../ports/UserService.cpp"
 #include "../ports/UserRepository.cpp"
 #include "../domain/User.cpp"
 
-class UserDomainService : UserService {
+class UserDomainService : public UserService {
 private:
     std::shared_ptr<UserRepository> userRepository;
     

@@ -7,7 +7,7 @@
 class RepositoriesSLModule : public ServiceLocator::Module {
 public:
   void load() override {
-    bind<UserRepository>("UserDomainService").to<UserRepositoryImpl>([] (SLContext_sptr slc) {
+    bind<UserRepository>("UserDomainService").to<UserRepositoryImpl>([](SLContext_sptr slc) {
       return new UserRepositoryImpl();
     });
   }

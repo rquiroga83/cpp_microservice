@@ -2,6 +2,7 @@
 #define MyController_hpp
 
 #include <memory>
+#include <iostream>
 #include "dto/DTOs.hpp"
 
 #include "oatpp/web/server/api/ApiController.hpp"
@@ -38,6 +39,9 @@ public:
     auto dto = MyDto::createShared();
     dto->statusCode = 200;
     dto->message = "Hola Mundo!";
+
+    auto user = userService->getUserById(10);
+
     return createDtoResponse(Status::CODE_200, dto);
   }
   
