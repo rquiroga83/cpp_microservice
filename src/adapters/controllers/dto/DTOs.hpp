@@ -10,12 +10,24 @@
  *  Data Transfer Object. Object containing fields only.
  *  Used in API for serialization/deserialization and validation
  */
-class MyDto : public oatpp::DTO {
+class UserDto : public oatpp::DTO {
   
-  DTO_INIT(MyDto, DTO)
+  DTO_INIT(UserDto, DTO)
   
+  /* Fields Definition */
+  DTO_FIELD(Int64, id);
+  DTO_FIELD(String, name);
+  DTO_FIELD(String, email);
   DTO_FIELD(Int32, statusCode);
-  DTO_FIELD(String, message);
+
+
+  /* Swagger info */
+  DTO_FIELD_INFO(name) { 
+    info->description = "user full name"; 
+  }
+  DTO_FIELD_INFO(email) { 
+    info->description = "user full email";
+  }
   
 };
 

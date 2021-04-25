@@ -1,13 +1,13 @@
 #include "./ServiceLocator.hpp"
 #include "./core/ports/UserRepository.cpp"
-#include "./repositories/UserRepositoryImpl.cpp"
-#include "./core/services/UserDomainService.cpp"
-#include "./core/ports/UserService.cpp"
+#include "./adapters/repositories/UserRepositoryImpl.cpp"
+#include "./core/services/UserService.cpp"
+#include "./core/ports/UserUseCase.cpp"
 
 class RepositoriesSLModule : public ServiceLocator::Module {
 public:
   void load() override {
-    bind<UserRepository>("UserDomainService").to<UserRepositoryImpl>([](SLContext_sptr slc) {
+    bind<UserRepository>("UserService").to<UserRepositoryImpl>([](SLContext_sptr slc) {
       return new UserRepositoryImpl();
     });
   }
@@ -17,8 +17,8 @@ public:
 class ServicesSLModule : public ServiceLocator::Module {
 public:
     void load() override {
-		bind<UserService>("UserDomainService").to<UserDomainService>([] (SLContext_sptr slc) { 
-			return new UserDomainService(slc->resolve<UserRepository>("UserDomainService"));
+		bind<UserUseCase>("UserService").to<UserService>([] (SLContext_sptr slc) { 
+			return new UserService(slc->resolve<UserRepository>("UserService"));
 		});
 	}
 };

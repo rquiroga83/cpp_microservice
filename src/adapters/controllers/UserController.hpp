@@ -9,7 +9,7 @@
 #include "oatpp/core/macro/codegen.hpp"
 #include "oatpp/core/macro/component.hpp"
 
-#include "../core/ports/UserService.cpp"
+#include "../../core/ports/UserUseCase.cpp"
 
 #include OATPP_CODEGEN_BEGIN(ApiController) //<-- Begin Codegen
 
@@ -18,7 +18,7 @@
  */
 class UserController : public oatpp::web::server::api::ApiController {
 private:
-    std::shared_ptr<UserService> userService;
+    std::shared_ptr<UserUseCase> userUseCase;
 
 public:
   /**
@@ -29,23 +29,32 @@ public:
     : oatpp::web::server::api::ApiController(objectMapper)
   {}
 
-  void setUserService(std::shared_ptr<UserService> service) {
-    userService = service;
+  void setUserUseCase(std::shared_ptr<UserUseCase> useCase) {
+    userUseCase = useCase;
   }
 
 public:
-  
-  ENDPOINT("GET", "/", root) {
-    auto dto = MyDto::createShared();
-    dto->statusCode = 200;
-    dto->message = "Hola Mundo!";
 
-    auto user = userService->getUserById(10);
+  ENDPOINT("GET", "/", root) {
+    return createResponse(Status::CODE_200, "");
+  }
+  
+  ENDPOINT("GET", "/users/{userId}", getUserById, PATH(String, userId)) {
+    OATPP_LOGD("getUserById", "userId=%s", userId->std_str().c_str());
+
+    long lUserId = strtol(userId->std_str().c_str(),NULL,10);
+
+    auto user = userUseCase->getUserById(lUserId);
+    
+    auto dto = UserDto::createShared();
+    
+    dto->id = user->id();
+    dto->name = user->name().c_str();
+    dto->email = user->email().c_str();
+    dto->statusCode = 200;
 
     return createDtoResponse(Status::CODE_200, dto);
   }
-  
-  // TODO Insert Your endpoints here !!!
   
 };
 

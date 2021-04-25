@@ -11,11 +11,11 @@ add_library(${project_name}-lib
 	#src/ServiceLocator.hpp
 	#src/SLModules.cpp
 	src/core/ports/UserRepository.cpp
-	src/repositories/UserRepositoryImpl.cpp
-        src/controllers/UserController.cpp
-        src/controllers/UserController.hpp
-        src/controllers/dto/DTOs.hpp
-	src/core/services/UserDomainService.cpp
+	src/adapters/repositories/UserRepositoryImpl.cpp
+        src/adapters/controllers/UserController.cpp
+        src/adapters/controllers/UserController.hpp
+        src/adapters/controllers/dto/DTOs.hpp
+	src/core/services/UserService.cpp
 )
 
 ## link libs

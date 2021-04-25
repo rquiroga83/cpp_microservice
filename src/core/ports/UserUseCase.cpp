@@ -1,10 +1,10 @@
-#ifndef USERSERVICE_CPP
-#define USERSERVICE_CPP
+#ifndef USERUSECASE_CPP
+#define USERUSECASE_CPP
 #include <memory>
 #include "../domain/User.cpp"
 
-class UserService {
+class UserUseCase {
 public:
     virtual std::shared_ptr<User> getUserById(long id) = 0;
 };
-#endif // USERSERVICE_CPP
+#endif // USERUSECASE_CPP
