@@ -11,7 +11,9 @@ This is a example of microservice built in c++, and using hexagonal architecture
 sudo apt-get install build-essential
 
 Instalar Oat++
+
 https://oatpp.io/docs/installation/unix-linux/#ubuntu
+
 https://oatpp.io/docs/start/step-by-step/#simplest-project
 
 
